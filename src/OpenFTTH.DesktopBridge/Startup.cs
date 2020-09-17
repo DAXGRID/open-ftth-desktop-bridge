@@ -1,71 +1,53 @@
-using System;
 using System.Threading;
-using System.Net.WebSockets;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace OpenFTTH.DesktopBridge
 {
-    public class Startup
+    public class Startup : IHostedService
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        private readonly ILogger<Startup> _logger;
+        private readonly IHostApplicationLifetime _applicationLifetime;
+
+        public Startup(ILogger<Startup> logger, IHostApplicationLifetime applicationLifetime)
         {
+            _logger = logger;
+            _applicationLifetime = applicationLifetime;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            _logger.LogInformation("Starting");
 
-            var webSocketOptions = new WebSocketOptions()
-            {
-                KeepAliveInterval = TimeSpan.FromSeconds(120),
-                ReceiveBufferSize = 4 * 1024
-            };
+            _applicationLifetime.ApplicationStarted.Register(OnStarted);
+            _applicationLifetime.ApplicationStopping.Register(OnStopped);
 
-            app.UseWebSockets(webSocketOptions);
+            MarkAsReady();
 
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.Path == "/ws")
-                {
-                    if (context.WebSockets.IsWebSocketRequest)
-                    {
-                        WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                        await Echo(context, webSocket);
-                    }
-                    else
-                    {
-                        context.Response.StatusCode = 400;
-                    }
-                }
-                else
-                {
-                    await next();
-                }
-            });
+            return Task.CompletedTask;
         }
 
-        private async Task Echo(HttpContext context, WebSocket webSocket)
+        public Task StopAsync(CancellationToken cancellationToken)
         {
-            var buffer = new byte[1024 * 4];
-            WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            while (!result.CloseStatus.HasValue)
-            {
-                await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, result.Count), result.MessageType, result.EndOfMessage, CancellationToken.None);
+            _logger.LogInformation("Stopping");
+            return Task.CompletedTask;
+        }
 
-                result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
-            }
-            await webSocket.CloseAsync(result.CloseStatus.Value, result.CloseStatusDescription, CancellationToken.None);
+        private void MarkAsReady()
+        {
+            File.Create("/tmp/healthy");
+        }
+
+        private void OnStarted()
+        {
+
+        }
+
+        private void OnStopped()
+        {
+            _logger.LogInformation("Stopped");
         }
     }
 }

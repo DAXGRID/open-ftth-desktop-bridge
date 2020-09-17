@@ -1,26 +1,43 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using OpenFTTH.DesktopBridge.Internal;
 
 namespace OpenFTTH.DesktopBridge
 {
-    public class Program
+    class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
-        }
+            using (var host = HostConfig.Configure())
+            {
+                await host.StartAsync();
+                await host.WaitForShutdownAsync();
+            }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+            // WebSocket server port
+            // int port = 5000;
+            // if (args.Length > 0)
+            //     port = int.Parse(args[0]);
+
+            // Console.WriteLine($"WebSocket server port: {port}");
+            // Console.WriteLine($"WebSocket server website: http://localhost:{port}/chat/index.html");
+
+            // Console.WriteLine();
+
+            // // Create a new WebSocket server
+            // var server = new Server(IPAddress.Any, port);
+
+            // // Start the server
+            // Console.Write("Server starting...");
+            // server.Start();
+            // Console.WriteLine("Done!");
+
+            // Console.WriteLine("Press Enter to stop the server or '!' to restart the server...");
+
+            // // Stop the server
+            // Console.Write("Server stopping...");
+            // server.Stop();
+            // Console.WriteLine("Done!");
+        }
     }
 }
