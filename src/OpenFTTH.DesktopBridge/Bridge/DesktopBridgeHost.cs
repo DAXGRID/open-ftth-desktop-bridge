@@ -50,6 +50,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
             _logger.LogInformation($"Starting {nameof(BridgeServer)} on port 5000");
             _bridgeServer.Start();
+            _bridgeServer.OptionKeepAlive = true;
         }
 
         private void OnStopped()
