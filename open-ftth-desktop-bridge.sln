@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1703CC29-54B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenFTTH.DesktopBridge", "src\OpenFTTH.DesktopBridge\OpenFTTH.DesktopBridge.csproj", "{B68C726A-DCFD-44C1-9E9B-CC4B1FB213C5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{F202B872-1C46-461E-87C7-193FD00C138D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenFTTH.DesktopBridge.Tests", "test\OpenFTTH.DesktopBridge.Tests\OpenFTTH.DesktopBridge.Tests.csproj", "{21E3B500-7865-41F7-AA37-2042D5EAC1E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,8 +36,21 @@ Global
 		{B68C726A-DCFD-44C1-9E9B-CC4B1FB213C5}.Release|x64.Build.0 = Release|Any CPU
 		{B68C726A-DCFD-44C1-9E9B-CC4B1FB213C5}.Release|x86.ActiveCfg = Release|Any CPU
 		{B68C726A-DCFD-44C1-9E9B-CC4B1FB213C5}.Release|x86.Build.0 = Release|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Debug|x64.Build.0 = Debug|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Debug|x86.Build.0 = Debug|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Release|x64.ActiveCfg = Release|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Release|x64.Build.0 = Release|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Release|x86.ActiveCfg = Release|Any CPU
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B68C726A-DCFD-44C1-9E9B-CC4B1FB213C5} = {1703CC29-54B8-4138-8F18-7E7BF46FF5BE}
+		{21E3B500-7865-41F7-AA37-2042D5EAC1E2} = {F202B872-1C46-461E-87C7-193FD00C138D}
 	EndGlobalSection
 EndGlobal
