@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenFTTH.Desktop.Bridge
+namespace OpenFTTH.DesktopBridge
 {
     class Program
     {

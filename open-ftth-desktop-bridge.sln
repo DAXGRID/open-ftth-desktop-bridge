@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1703CC29-54B8-4138-8F18-7E7BF46FF5BE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenFTTH.Desktop.Bridge", "src\OpenFTTH.Desktop.Bridge\OpenFTTH.Desktop.Bridge.csproj", "{B68C726A-DCFD-44C1-9E9B-CC4B1FB213C5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenFTTH.DesktopBridge", "src\OpenFTTH.DesktopBridge\OpenFTTH.DesktopBridge.csproj", "{B68C726A-DCFD-44C1-9E9B-CC4B1FB213C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
