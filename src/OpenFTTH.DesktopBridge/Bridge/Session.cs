@@ -3,11 +3,11 @@ using System.Net.Sockets;
 using System.Text;
 using NetCoreServer;
 
-namespace OpenFTTH.DesktopBridge
+namespace OpenFTTH.DesktopBridge.Bridge
 {
-    public class Session : WsSession
+    public class BridgeSession : WsSession
     {
-        public Session(WsServer server) : base(server) { }
+        public BridgeSession(WsServer server) : base(server) { }
 
         public override void OnWsConnected(HttpRequest request)
         {

@@ -3,13 +3,13 @@ using System.Net;
 using System.Net.Sockets;
 using NetCoreServer;
 
-namespace OpenFTTH.DesktopBridge
+namespace OpenFTTH.DesktopBridge.Bridge
 {
-    public class Server : WsServer
+    public class BridgeServer : WsServer
     {
-        public Server(IPAddress address, int port) : base(address, port) { }
+        public BridgeServer(IPAddress address, int port) : base(address, port) { }
 
-        protected override TcpSession CreateSession() { return new Session(this); }
+        protected override TcpSession CreateSession() { return new BridgeSession(this); }
 
         protected override void OnError(SocketError error)
         {

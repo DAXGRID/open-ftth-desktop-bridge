@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using OpenFTTH.DesktopBridge.Bridge;
 
 namespace OpenFTTH.DesktopBridge.Internal
 {
@@ -31,7 +31,8 @@ namespace OpenFTTH.DesktopBridge.Internal
             hostBuilder.ConfigureServices((hostContext, services) =>
             {
                 services.AddOptions();
-                services.AddHostedService<Startup>();
+                services.AddHostedService<DesktopBridgeHost>();
+                services.AddSingleton<IBridgeServerFactory, BridgeServerFactory>();
             });
         }
 
