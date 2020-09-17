@@ -5,7 +5,7 @@ Enables the communication between desktop applications such as QGIS to the open-
 ## Requirements running the application
 
 * [Taskfile](https://taskfile.dev/#/installation)
-* dotnet runtime 3.1
+* dotnet aspnet-runtime 3.1
 
 ## Running
 
