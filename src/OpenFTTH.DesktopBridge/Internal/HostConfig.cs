@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using OpenFTTH.DesktopBridge.Bridge;
+using System.Net;
 
 namespace OpenFTTH.DesktopBridge.Internal
 {
@@ -32,7 +33,15 @@ namespace OpenFTTH.DesktopBridge.Internal
             {
                 services.AddOptions();
                 services.AddHostedService<DesktopBridgeHost>();
-                services.AddSingleton<IBridgeServerFactory, BridgeServerFactory>();
+
+                services.AddTransient<IBridgeSessionFactory, BridgeSessionFactory>();
+
+                services.AddSingleton<BridgeServer>(
+                    x => new BridgeServer(
+                        IPAddress.Any,
+                        5000,
+                        x.GetRequiredService<IBridgeSessionFactory>(),
+                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>()));
             });
         }
 

@@ -7,16 +7,18 @@ namespace OpenFTTH.DesktopBridge.Bridge
 {
     public class BridgeServer : WsServer
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<BridgeServer> _logger;
+        private readonly IBridgeSessionFactory _bridgeSessionFactory;
 
-        public BridgeServer(IPAddress address, int port, ILogger logger) : base(address, port)
+        public BridgeServer(IPAddress address, int port, IBridgeSessionFactory bridgeSessionFactory, ILogger<BridgeServer> logger) : base(address, port)
         {
             _logger = logger;
+            _bridgeSessionFactory = bridgeSessionFactory;
         }
 
         protected override TcpSession CreateSession()
         {
-            return new BridgeSession(this, _logger);
+            return _bridgeSessionFactory.Create(this);
         }
 
         protected override void OnError(SocketError error)

@@ -7,9 +7,9 @@ namespace OpenFTTH.DesktopBridge.Bridge
 {
     public class BridgeSession : WsSession
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<BridgeSession> _logger;
 
-        public BridgeSession(WsServer server, ILogger logger) : base(server)
+        public BridgeSession(WsServer server, ILogger<BridgeSession> logger) : base(server)
         {
             _logger = logger;
         }

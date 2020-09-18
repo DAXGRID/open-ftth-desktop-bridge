@@ -10,14 +10,13 @@ namespace OpenFTTH.DesktopBridge.Bridge
     {
         private readonly ILogger<DesktopBridgeHost> _logger;
         private readonly IHostApplicationLifetime _applicationLifetime;
-        private readonly IBridgeServerFactory _bridgeServerFactory;
         private BridgeServer _bridgeServer;
 
-        public DesktopBridgeHost(ILogger<DesktopBridgeHost> logger, IHostApplicationLifetime applicationLifetime, IBridgeServerFactory bridgeServerFactory)
+        public DesktopBridgeHost(ILogger<DesktopBridgeHost> logger, IHostApplicationLifetime applicationLifetime, BridgeServer bridgeServer)
         {
             _logger = logger;
             _applicationLifetime = applicationLifetime;
-            _bridgeServerFactory = bridgeServerFactory;
+            _bridgeServer = bridgeServer;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -46,8 +45,6 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
         private void OnStarted()
         {
-            _bridgeServer = _bridgeServerFactory.Create(5000);
-
             _logger.LogInformation($"Starting {nameof(BridgeServer)} on port 5000");
             _bridgeServer.Start();
             _bridgeServer.OptionKeepAlive = true;
