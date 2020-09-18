@@ -26,7 +26,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
         public override void OnWsReceived(byte[] buffer, long offset, long size)
         {
-            string message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+            var message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
             ((WsServer)Server).MulticastText(message);
         }
 

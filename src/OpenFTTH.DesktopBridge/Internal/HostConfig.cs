@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using OpenFTTH.DesktopBridge.Bridge;
+using OpenFTTH.DesktopBridge.Consumer;
+using OpenFTTH.DesktopBridge.Config;
 using System.Net;
 
 namespace OpenFTTH.DesktopBridge.Internal
@@ -35,6 +37,10 @@ namespace OpenFTTH.DesktopBridge.Internal
                 services.AddHostedService<DesktopBridgeHost>();
 
                 services.AddTransient<IBridgeSessionFactory, BridgeSessionFactory>();
+                services.AddTransient<IConsumer, KafkaConsumer>();
+
+                services.Configure<KafkaSetting>(kafkaSettings =>
+                                                 hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));
 
                 services.AddSingleton<BridgeServer>(
                     x => new BridgeServer(
