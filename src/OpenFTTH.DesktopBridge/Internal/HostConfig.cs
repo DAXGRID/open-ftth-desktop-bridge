@@ -55,6 +55,5 @@ namespace OpenFTTH.DesktopBridge.Internal
                 });
             });
         }
-
     }
 }

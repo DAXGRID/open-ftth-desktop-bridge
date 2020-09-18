@@ -1,19 +1,27 @@
-using System;
 using System.Net;
 using System.Net.Sockets;
 using NetCoreServer;
+using Microsoft.Extensions.Logging;
 
 namespace OpenFTTH.DesktopBridge.Bridge
 {
     public class BridgeServer : WsServer
     {
-        public BridgeServer(IPAddress address, int port) : base(address, port) { }
+        private readonly ILogger _logger;
 
-        protected override TcpSession CreateSession() { return new BridgeSession(this); }
+        public BridgeServer(IPAddress address, int port, ILogger logger) : base(address, port)
+        {
+            _logger = logger;
+        }
+
+        protected override TcpSession CreateSession()
+        {
+            return new BridgeSession(this, _logger);
+        }
 
         protected override void OnError(SocketError error)
         {
-            Console.WriteLine($"Chat WebSocket server caught an error with code {error}");
+            _logger.LogError($"Chat WebSocket server caught an error with code {error}");
         }
     }
 }
