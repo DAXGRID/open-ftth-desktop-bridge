@@ -7,6 +7,7 @@ using OpenFTTH.DesktopBridge.Bridge;
 using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
 using OpenFTTH.DesktopBridge.Config;
 using System.Net;
+using MediatR;
 
 namespace OpenFTTH.DesktopBridge.Internal
 {
@@ -35,8 +36,9 @@ namespace OpenFTTH.DesktopBridge.Internal
             hostBuilder.ConfigureServices((hostContext, services) =>
             {
                 services.AddOptions();
-                services.AddHostedService<DesktopBridgeHost>();
+                services.AddMediatR(typeof(Program));
 
+                services.AddHostedService<DesktopBridgeHost>();
                 services.AddTransient<IBridgeSessionFactory, BridgeSessionFactory>();
                 services.AddTransient<IGeographicalAreaUpdatedConsumer, GeographicalAreaUpdatedKafkaConsumer>();
 

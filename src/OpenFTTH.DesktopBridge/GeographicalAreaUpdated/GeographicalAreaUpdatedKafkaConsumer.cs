@@ -4,19 +4,22 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Logging;
 using OpenFTTH.DesktopBridge.Config;
 using OpenFTTH.Events.Geo;
+using MediatR;
 
 namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
 {
     public class GeographicalAreaUpdatedKafkaConsumer : IGeographicalAreaUpdatedConsumer, IDisposable
     {
         private IDisposable _consumer;
-        private KafkaSetting _kafkaSetting;
+        private readonly KafkaSetting _kafkaSetting;
         private readonly ILogger<GeographicalAreaUpdatedKafkaConsumer> _logger;
+        private readonly IMediator _mediator;
 
-        public GeographicalAreaUpdatedKafkaConsumer(IOptions<KafkaSetting> kafkaSetting, ILogger<GeographicalAreaUpdatedKafkaConsumer> logger)
+        public GeographicalAreaUpdatedKafkaConsumer(IOptions<KafkaSetting> kafkaSetting, ILogger<GeographicalAreaUpdatedKafkaConsumer> logger, IMediator mediator)
         {
             _kafkaSetting = kafkaSetting.Value;
             _logger = logger;
+            _mediator = mediator;
         }
 
         public void Consume()
@@ -38,6 +41,7 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
                         switch (message.Body)
                         {
                             case ObjectsWithinGeographicalAreaUpdated objectsWithinGeographicalAreaUpdated:
+                                await _mediator.Send(new GeographicalAreaUpdated(objectsWithinGeographicalAreaUpdated));
                                 break;
                         }
 

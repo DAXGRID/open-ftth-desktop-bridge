@@ -28,7 +28,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Starting");
+            _logger.LogInformation($"Starting {nameof(DesktopBridgeHost)}");
 
             _applicationLifetime.ApplicationStarted.Register(OnStarted);
             _applicationLifetime.ApplicationStopping.Register(OnStopped);
@@ -52,7 +52,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
         private void OnStarted()
         {
-            _logger.LogInformation($"Starting {nameof(BridgeServer)} on port 5000");
+            _logger.LogInformation($"Starting {nameof(BridgeServer)}");
             _bridgeServer.Start();
             _geographicalAreaUpdatedConsumer.Consume();
         }
