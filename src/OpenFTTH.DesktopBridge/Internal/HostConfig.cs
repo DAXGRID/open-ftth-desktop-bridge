@@ -39,7 +39,6 @@ namespace OpenFTTH.DesktopBridge.Internal
                 services.AddMediatR(typeof(Program));
 
                 services.AddHostedService<DesktopBridgeHost>();
-                services.AddTransient<IBridgeSessionFactory, BridgeSessionFactory>();
                 services.AddTransient<IGeographicalAreaUpdatedConsumer, GeographicalAreaUpdatedKafkaConsumer>();
 
                 services.Configure<KafkaSetting>(kafkaSettings =>
@@ -49,7 +48,6 @@ namespace OpenFTTH.DesktopBridge.Internal
                     x => new BridgeServer(
                         IPAddress.Any,
                         5000,
-                        x.GetRequiredService<IBridgeSessionFactory>(),
                         x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>()));
 
 
