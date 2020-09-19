@@ -18,6 +18,7 @@
     <PackageReference Include="Topos.Kafka" Version="0.0.81" />
     <PackageReference Include="Topos.Serilog" Version="0.0.81" />
     <PackageReference Include="Topos.NewtonsoftJson" Version="0.0.81" />
+    <PackageReference Include="OpenFTTH.Events" Version="2.1.2" />
   </ItemGroup>
 
 </Project>

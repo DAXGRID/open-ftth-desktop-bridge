@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.IO;
+using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
 
 namespace OpenFTTH.DesktopBridge.Bridge
 {
@@ -10,13 +11,19 @@ namespace OpenFTTH.DesktopBridge.Bridge
     {
         private readonly ILogger<DesktopBridgeHost> _logger;
         private readonly IHostApplicationLifetime _applicationLifetime;
-        private BridgeServer _bridgeServer;
+        private readonly BridgeServer _bridgeServer;
+        private readonly IGeographicalAreaUpdatedConsumer _geographicalAreaUpdatedConsumer;
 
-        public DesktopBridgeHost(ILogger<DesktopBridgeHost> logger, IHostApplicationLifetime applicationLifetime, BridgeServer bridgeServer)
+        public DesktopBridgeHost(
+            ILogger<DesktopBridgeHost> logger,
+            IHostApplicationLifetime applicationLifetime,
+            BridgeServer bridgeServer,
+            IGeographicalAreaUpdatedConsumer geographicalAreaUpdatedConsumer)
         {
             _logger = logger;
             _applicationLifetime = applicationLifetime;
             _bridgeServer = bridgeServer;
+            _geographicalAreaUpdatedConsumer = geographicalAreaUpdatedConsumer;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -47,11 +54,12 @@ namespace OpenFTTH.DesktopBridge.Bridge
         {
             _logger.LogInformation($"Starting {nameof(BridgeServer)} on port 5000");
             _bridgeServer.Start();
-            _bridgeServer.OptionKeepAlive = true;
+            _geographicalAreaUpdatedConsumer.Consume();
         }
 
         private void OnStopped()
         {
+            _geographicalAreaUpdatedConsumer.Dispose();
             _bridgeServer.Dispose();
             _logger.LogInformation("Stopped");
         }

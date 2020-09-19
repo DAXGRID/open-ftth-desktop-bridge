@@ -2,8 +2,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Formatting.Compact;
 using OpenFTTH.DesktopBridge.Bridge;
-using OpenFTTH.DesktopBridge.Consumer;
+using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
 using OpenFTTH.DesktopBridge.Config;
 using System.Net;
 
@@ -37,7 +38,7 @@ namespace OpenFTTH.DesktopBridge.Internal
                 services.AddHostedService<DesktopBridgeHost>();
 
                 services.AddTransient<IBridgeSessionFactory, BridgeSessionFactory>();
-                services.AddTransient<IConsumer, KafkaConsumer>();
+                services.AddTransient<IGeographicalAreaUpdatedConsumer, GeographicalAreaUpdatedKafkaConsumer>();
 
                 services.Configure<KafkaSetting>(kafkaSettings =>
                                                  hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));
@@ -48,6 +49,10 @@ namespace OpenFTTH.DesktopBridge.Internal
                         5000,
                         x.GetRequiredService<IBridgeSessionFactory>(),
                         x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>()));
+
+
+                services.Configure<KafkaSetting>(kafkaSettings =>
+                                                 hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));
             });
         }
 
@@ -63,7 +68,7 @@ namespace OpenFTTH.DesktopBridge.Internal
                     var logger = new LoggerConfiguration()
                         .ReadFrom.Configuration(loggingConfiguration)
                         .Enrich.FromLogContext()
-                        .WriteTo.Console()
+                        .WriteTo.Console(new CompactJsonFormatter())
                         .CreateLogger();
 
                     loggingBuilder.AddSerilog(logger, true);

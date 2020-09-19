@@ -5,4 +5,4 @@ export KAFKA__EVENTGEOGRAPHICALAREAUPDATEDCONSUMER="event-geographical-area-upda
 export KAFKA__EVENTGEOGRAPHICALAREAUPDATED="event.geographical-area-updated"
 
 # Logging
-export SERILOG__MINIMUMLEVEL="Warning"
+export SERILOG__MINIMUMLEVEL="Information"

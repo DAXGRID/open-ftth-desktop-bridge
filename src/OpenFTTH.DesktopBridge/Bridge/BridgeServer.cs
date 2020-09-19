@@ -14,6 +14,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
         {
             _logger = logger;
             _bridgeSessionFactory = bridgeSessionFactory;
+            OptionKeepAlive = true;
         }
 
         protected override TcpSession CreateSession()
