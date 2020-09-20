@@ -8,6 +8,9 @@ using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
 using OpenFTTH.DesktopBridge.Config;
 using System.Net;
 using MediatR;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace OpenFTTH.DesktopBridge.Internal
 {
@@ -19,8 +22,22 @@ namespace OpenFTTH.DesktopBridge.Internal
             ConfigureApp(hostBuilder);
             ConfigureServices(hostBuilder);
             ConfigureLogging(hostBuilder);
+            ConfigureJsonConverter();
 
             return hostBuilder.Build();
+        }
+
+        private static void ConfigureJsonConverter()
+        {
+            JsonConvert.DefaultSettings = (() =>
+            {
+                var settings = new JsonSerializerSettings();
+                settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                settings.Converters.Add(new StringEnumConverter());
+                settings.TypeNameHandling = TypeNameHandling.Auto;
+
+                return settings;
+            });
         }
 
         private static void ConfigureApp(IHostBuilder hostBuilder)
@@ -31,7 +48,7 @@ namespace OpenFTTH.DesktopBridge.Internal
             });
         }
 
-      private static void ConfigureServices(IHostBuilder hostBuilder)
+        private static void ConfigureServices(IHostBuilder hostBuilder)
         {
             hostBuilder.ConfigureServices((hostContext, services) =>
             {
