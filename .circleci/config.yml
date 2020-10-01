@@ -3,12 +3,12 @@ version: 2.1
 executors:
   dotnet-core-sdk:
     docker:
-    - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+    - image: mcr.microsoft.com/dotnet/core/sdk:3.1.402-alpine3.12
   docker-publisher:
     environment:
       IMAGE_NAME: openftth/desktop-bridge
     docker:
-      - image: circleci/buildpack-deps:stretch
+      - image: cimg/base:2020.09
 
 jobs:
   build-app:
