@@ -27,6 +27,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
         public override void OnWsReceived(byte[] buffer, long offset, long size)
         {
             var message = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+            _logger.LogDebug($"Received from id: '{Id}': {message}");
         }
 
         protected override void OnError(SocketError error)
