@@ -24,12 +24,12 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
 
         public void Consume()
         {
-            _logger.LogInformation($"Starting consuming on server {_kafkaSetting.Server} with topic: '{_kafkaSetting.EventGeographicalAreaUpdated}' and consumer group: '{_kafkaSetting.EventGeographicalAreaUpdatedConsumer}'");
+            _logger.LogInformation($"Starting consuming on server {_kafkaSetting.Server} with topic: '{_kafkaSetting.NotificationGeographicalAreaUpdated}' and consumer group: '{_kafkaSetting.NotificationGeographicalAreaUpdatedConsumer}'");
 
             _consumer = Configure
-                .Consumer(_kafkaSetting.EventGeographicalAreaUpdatedConsumer, c => c.UseKafka(_kafkaSetting.Server))
+                .Consumer(_kafkaSetting.NotificationGeographicalAreaUpdatedConsumer, c => c.UseKafka(_kafkaSetting.Server))
                 .Serialization(s => s.UseNewtonsoftJson())
-                .Topics(t => t.Subscribe(_kafkaSetting.EventGeographicalAreaUpdated))
+                .Topics(t => t.Subscribe(_kafkaSetting.NotificationGeographicalAreaUpdated))
                 .Logging(x => x.UseSerilog())
                 .Positions(p => p.StoreInFileSystem(_kafkaSetting.PositionFilePath))
                 .Handle(async (messages, context, token) =>
