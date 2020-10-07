@@ -31,7 +31,12 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
                 .Serialization(s => s.UseNewtonsoftJson())
                 .Topics(t => t.Subscribe(_kafkaSetting.NotificationGeographicalAreaUpdated))
                 .Logging(x => x.UseSerilog())
-                .Positions(p => p.StoreInFileSystem(_kafkaSetting.PositionFilePath))
+                .Positions(x =>
+                {
+                    x.SetInitialPosition(StartFromPosition.Now);
+                    x.StoreInMemory();
+                })
+                .Options(x => { x.SetMinimumBatchSize(1); })
                 .Handle(async (messages, context, token) =>
                 {
                     foreach (var message in messages)
