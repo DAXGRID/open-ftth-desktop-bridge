@@ -18,10 +18,10 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
     <PackageReference Include="Serilog.Formatting.Compact" Version="1.1.0" />
-    <PackageReference Include="Topos" Version="0.0.81" />
-    <PackageReference Include="Topos.Kafka" Version="0.0.81" />
-    <PackageReference Include="Topos.Serilog" Version="0.0.81" />
-    <PackageReference Include="Topos.NewtonsoftJson" Version="0.0.81" />
+    <PackageReference Include="Topos" Version="0.0.84" />
+    <PackageReference Include="Topos.Kafka" Version="0.0.84" />
+    <PackageReference Include="Topos.Serilog" Version="0.0.84" />
+    <PackageReference Include="Topos.NewtonsoftJson" Version="0.0.84" />
     <PackageReference Include="OpenFTTH.Events" Version="2.1.2" />
   </ItemGroup>
 
