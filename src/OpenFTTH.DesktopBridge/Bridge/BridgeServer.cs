@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace OpenFTTH.DesktopBridge.Bridge
 {
-    public class BridgeServer : WsServer
+    public class BridgeServer : WsServer, IBridgeServer
     {
         private readonly ILogger<BridgeServer> _logger;
 
