@@ -61,12 +61,11 @@ namespace OpenFTTH.DesktopBridge.Internal
                 services.Configure<KafkaSetting>(kafkaSettings =>
                                                  hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));
 
-                services.AddSingleton<BridgeServer>(
+                services.AddSingleton<IBridgeServer, BridgeServer>(
                     x => new BridgeServer(
                         IPAddress.Any,
                         5000,
                         x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>()));
-
 
                 services.Configure<KafkaSetting>(kafkaSettings =>
                                                  hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));

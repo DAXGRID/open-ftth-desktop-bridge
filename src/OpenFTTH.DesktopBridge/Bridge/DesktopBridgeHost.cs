@@ -11,13 +11,13 @@ namespace OpenFTTH.DesktopBridge.Bridge
     {
         private readonly ILogger<DesktopBridgeHost> _logger;
         private readonly IHostApplicationLifetime _applicationLifetime;
-        private readonly BridgeServer _bridgeServer;
+        private readonly IBridgeServer _bridgeServer;
         private readonly IGeographicalAreaUpdatedConsumer _geographicalAreaUpdatedConsumer;
 
         public DesktopBridgeHost(
             ILogger<DesktopBridgeHost> logger,
             IHostApplicationLifetime applicationLifetime,
-            BridgeServer bridgeServer,
+            IBridgeServer bridgeServer,
             IGeographicalAreaUpdatedConsumer geographicalAreaUpdatedConsumer)
         {
             _logger = logger;

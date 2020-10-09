@@ -4,16 +4,14 @@ using OpenFTTH.DesktopBridge.Bridge;
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using System.IO;
 using System.Text;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 
 namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
 {
     public class GeographicalAreaUpdated : IRequest<Unit>
     {
-        public ObjectsWithinGeographicalAreaUpdated ObjectsWithinGeographicalAreaUpdated { get; }
+        public virtual ObjectsWithinGeographicalAreaUpdated ObjectsWithinGeographicalAreaUpdated { get; }
 
         public GeographicalAreaUpdated(ObjectsWithinGeographicalAreaUpdated objectsWithinGeographicalAreaUpdated)
         {
@@ -23,15 +21,18 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
 
     public class GeographicalAreaUpdatedHandler : IRequestHandler<GeographicalAreaUpdated>
     {
-        private readonly BridgeServer _bridgeServer;
+        private readonly IBridgeServer _bridgeServer;
 
-        public GeographicalAreaUpdatedHandler(BridgeServer bridgeServer)
+        public GeographicalAreaUpdatedHandler(IBridgeServer bridgeServer)
         {
             _bridgeServer = bridgeServer;
         }
 
         public async Task<Unit> Handle(GeographicalAreaUpdated request, CancellationToken cancellationToken)
         {
+            if (request.ObjectsWithinGeographicalAreaUpdated is null)
+                throw new ArgumentNullException($"{nameof(ObjectsWithinGeographicalAreaUpdated)} cannot be null");
+
             var json = JsonConvert.SerializeObject(request.ObjectsWithinGeographicalAreaUpdated);
             var base64JsonString = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
 
