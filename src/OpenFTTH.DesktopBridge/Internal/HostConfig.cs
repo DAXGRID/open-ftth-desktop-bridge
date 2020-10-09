@@ -65,10 +65,8 @@ namespace OpenFTTH.DesktopBridge.Internal
                     x => new BridgeServer(
                         IPAddress.Any,
                         5000,
-                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>()));
-
-                services.Configure<KafkaSetting>(kafkaSettings =>
-                                                 hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));
+                        x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>(),
+                        x.GetRequiredService<IMediator>()));
             });
         }
 

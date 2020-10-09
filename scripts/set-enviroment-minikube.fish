@@ -4,5 +4,5 @@ export KAFKA__POSITIONFILEPATH="/tmp/"
 export KAFKA__NOTIFICATIONGEOGRAPHICALAREAUPDATEDCONSUMER="notification-geographical-area-updated-desktop-bridge-consumer"
 export KAFKA__NOTIFICATIONGEOGRAPHICALAREAUPDATED="notification.geographical-area-updated"
 
-# Logging
-export SERILOG__MINIMUMLEVEL="Information"
+# LoggingDebug
+export SERILOG__MINIMUMLEVEL="Debug"

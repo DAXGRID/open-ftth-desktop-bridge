@@ -2,16 +2,19 @@ using System.Net.Sockets;
 using System.Text;
 using NetCoreServer;
 using Microsoft.Extensions.Logging;
+using MediatR;
 
 namespace OpenFTTH.DesktopBridge.Bridge
 {
     public class BridgeSession : WsSession
     {
         private readonly ILogger<BridgeServer> _logger;
+        private readonly IMediator _mediator;
 
-        public BridgeSession(WsServer server, ILogger<BridgeServer> logger) : base(server)
+        public BridgeSession(WsServer server, ILogger<BridgeServer> logger, IMediator mediator) : base(server)
         {
             _logger = logger;
+            _mediator = mediator;
         }
 
         public override void OnWsConnected(HttpRequest request)
