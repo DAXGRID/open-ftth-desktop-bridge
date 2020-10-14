@@ -15,7 +15,10 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
         private readonly ILogger<GeographicalAreaUpdatedKafkaConsumer> _logger;
         private readonly IMediator _mediator;
 
-        public GeographicalAreaUpdatedKafkaConsumer(IOptions<KafkaSetting> kafkaSetting, ILogger<GeographicalAreaUpdatedKafkaConsumer> logger, IMediator mediator)
+        public GeographicalAreaUpdatedKafkaConsumer(
+            IOptions<KafkaSetting> kafkaSetting,
+            ILogger<GeographicalAreaUpdatedKafkaConsumer> logger,
+            IMediator mediator)
         {
             _kafkaSetting = kafkaSetting.Value;
             _logger = logger;
@@ -49,7 +52,6 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
                                 await _mediator.Send(new GeographicalAreaUpdated(objectsWithinGeographicalAreaUpdated));
                                 break;
                         }
-
                     }
                 }).Start();
         }
