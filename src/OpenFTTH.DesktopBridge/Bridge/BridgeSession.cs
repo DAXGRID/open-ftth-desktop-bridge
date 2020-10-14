@@ -52,6 +52,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
                     _mediator.Send(new IdentifyNetworkElement(jsonMessage));
                     break;
                 default:
+                    _logger.LogWarning($"No event of type '{eventType}'");
                     break;
             }
         }
