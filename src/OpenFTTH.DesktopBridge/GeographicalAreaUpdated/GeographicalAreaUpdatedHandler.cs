@@ -4,7 +4,6 @@ using OpenFTTH.DesktopBridge.Bridge;
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
