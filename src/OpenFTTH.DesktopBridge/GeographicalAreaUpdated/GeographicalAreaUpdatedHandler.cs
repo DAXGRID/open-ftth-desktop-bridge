@@ -34,9 +34,8 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
                 throw new ArgumentNullException($"{nameof(ObjectsWithinGeographicalAreaUpdated)} cannot be null");
 
             var json = JsonConvert.SerializeObject(request.ObjectsWithinGeographicalAreaUpdated);
-            var base64JsonString = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
 
-            _bridgeServer.MulticastText(base64JsonString);
+            _bridgeServer.MulticastText(json);
             return await Task.FromResult(new Unit());
         }
     }
