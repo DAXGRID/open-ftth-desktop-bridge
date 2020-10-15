@@ -4,7 +4,6 @@ using OpenFTTH.DesktopBridge.Bridge;
 using System.Threading;
 using System;
 using System.Threading.Tasks;
-using System.Text;
 using Newtonsoft.Json;
 
 namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
@@ -34,9 +33,8 @@ namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
                 throw new ArgumentNullException($"{nameof(ObjectsWithinGeographicalAreaUpdated)} cannot be null");
 
             var json = JsonConvert.SerializeObject(request.ObjectsWithinGeographicalAreaUpdated);
-            var base64JsonString = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
 
-            _bridgeServer.MulticastText(base64JsonString);
+            _bridgeServer.MulticastText(json);
             return await Task.FromResult(new Unit());
         }
     }

@@ -1,7 +1,5 @@
 using MediatR;
 using OpenFTTH.DesktopBridge.Bridge;
-using System;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,8 +26,7 @@ namespace OpenFTTH.DesktopBridge.IdentifyNetwork
 
         public async Task<Unit> Handle(IdentifyNetworkElement request, CancellationToken cancellationToken)
         {
-            var base64JsonString = Convert.ToBase64String(Encoding.UTF8.GetBytes(request.Message));
-            _bridgeServer.MulticastText(base64JsonString);
+            _bridgeServer.MulticastText(request.Message);
 
             return await Task.FromResult(new Unit());
         }
