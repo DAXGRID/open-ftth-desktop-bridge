@@ -4,11 +4,17 @@ executors:
   dotnet-core-sdk:
     docker:
     - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+      auth:
+        username: $DOCKER_LOGIN
+        password: $DOCKER_ACCESSTOKEN
   docker-publisher:
     environment:
       IMAGE_NAME: openftth/desktop-bridge
     docker:
       - image: cimg/base:2020.09
+        auth:
+          username: $DOCKER_LOGIN
+          password: $DOCKER_ACCESSTOKEN
 
 jobs:
   build-app:
@@ -74,14 +80,17 @@ workflows:
   build-test-upload_image:
     jobs:
       - build-app:
+          context: docker
           filters:
             tags:
               only: /.*/
       - test-app:
+          context: docker
           filters:
             tags:
               only: /.*/
       - build-docker-image:
+          context: docker
           filters:
             tags:
               only: /^v.*/
