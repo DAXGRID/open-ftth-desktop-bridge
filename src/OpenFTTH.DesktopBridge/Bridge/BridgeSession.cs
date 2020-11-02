@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using MediatR;
 using Newtonsoft.Json.Linq;
 using OpenFTTH.DesktopBridge.IdentifyNetwork;
+using OpenFTTH.DesktopBridge.Retrieve;
 
 namespace OpenFTTH.DesktopBridge.Bridge
 {
@@ -29,7 +30,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
             _logger.LogInformation($"Chat WebSocket session with Id {Id} disconnected!");
         }
 
-        public override void OnWsReceived(byte[] buffer, long offset, long size)
+        public async override void OnWsReceived(byte[] buffer, long offset, long size)
         {
             var jsonMessage = string.Empty;
             try
@@ -51,7 +52,10 @@ namespace OpenFTTH.DesktopBridge.Bridge
                 switch (eventType)
                 {
                     case "IdentifyNetworkElement":
-                        _mediator.Send(new IdentifyNetworkElement(jsonMessage));
+                        await _mediator.Send(new IdentifyNetworkElement(jsonMessage));
+                        break;
+                    case "RetriveSelected":
+                        await _mediator.Send(new RetrieveSelected("INSERT USERNAME"));
                         break;
                     default:
                         _logger.LogWarning($"No event of type '{eventType}'");
