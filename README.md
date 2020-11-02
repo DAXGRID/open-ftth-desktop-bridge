@@ -1,4 +1,4 @@
-# Open-ftth desktop brigde
+# OPEN-FTTH Desktop-Bridge
 
 Enables the communication between desktop applications such as QGIS to the open-ftth system using sockets.
 
@@ -6,6 +6,12 @@ Enables the communication between desktop applications such as QGIS to the open-
 
 * [Taskfile](https://taskfile.dev/#/installation)
 * dotnet aspnet-runtime 3.1
+
+## Configure environment variables using minikube ip and ports
+
+```sh
+. ./scripts/set-environment-minikube.sh
+```
 
 ## Running
 
