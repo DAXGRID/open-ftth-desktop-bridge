@@ -31,28 +31,36 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
         public override void OnWsReceived(byte[] buffer, long offset, long size)
         {
-            var jsonMessage = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-            _logger.LogDebug($"Received from id: '{Id}': {jsonMessage}");
-
-            var message = JObject.Parse(jsonMessage);
-            var eventTypePropertyName = "eventType";
-
-            var eventType = message.GetValue(eventTypePropertyName)?.ToString();
-
-            if (string.IsNullOrEmpty(eventType))
+            var jsonMessage = string.Empty;
+            try
             {
-                _logger.LogWarning($"The following message: '{jsonMessage}', does not contain a property named '{eventTypePropertyName}' and cannot be parsed.");
-                return;
+                jsonMessage = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+                _logger.LogDebug($"Received from id: '{Id}': {jsonMessage}");
+
+                var message = JObject.Parse(jsonMessage);
+                var eventTypePropertyName = "eventType";
+
+                var eventType = message.GetValue(eventTypePropertyName)?.ToString();
+
+                if (string.IsNullOrEmpty(eventType))
+                {
+                    _logger.LogWarning($"The following message: '{jsonMessage}', does not contain a property named '{eventTypePropertyName}' and cannot be parsed.");
+                    return;
+                }
+
+                switch (eventType)
+                {
+                    case "IdentifyNetworkElement":
+                        _mediator.Send(new IdentifyNetworkElement(jsonMessage));
+                        break;
+                    default:
+                        _logger.LogWarning($"No event of type '{eventType}'");
+                        break;
+                }
             }
-
-            switch (eventType)
+            catch
             {
-                case "IdentifyNetworkElement":
-                    _mediator.Send(new IdentifyNetworkElement(jsonMessage));
-                    break;
-                default:
-                    _logger.LogWarning($"No event of type '{eventType}'");
-                    break;
+                _logger.LogError($"Received invalid message with content: {jsonMessage}");
             }
         }
 
