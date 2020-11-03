@@ -2,19 +2,10 @@ using MediatR;
 using OpenFTTH.DesktopBridge.Bridge;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace OpenFTTH.DesktopBridge.IdentifyNetwork
 {
-    public class IdentifyNetworkElement : IRequest<Unit>
-    {
-        public string Message { get; }
-
-        public IdentifyNetworkElement(string message)
-        {
-            Message = message;
-        }
-    }
-
     public class IdentifyNetworkElementHandler : IRequestHandler<IdentifyNetworkElement>
     {
         private readonly IBridgeServer _bridgeServer;
@@ -26,7 +17,7 @@ namespace OpenFTTH.DesktopBridge.IdentifyNetwork
 
         public async Task<Unit> Handle(IdentifyNetworkElement request, CancellationToken cancellationToken)
         {
-            _bridgeServer.MulticastText(request.Message);
+            _bridgeServer.MulticastText(JsonConvert.SerializeObject(request));
 
             return await Task.FromResult(new Unit());
         }

@@ -3,9 +3,11 @@ using System.Text;
 using NetCoreServer;
 using Microsoft.Extensions.Logging;
 using MediatR;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OpenFTTH.DesktopBridge.IdentifyNetwork;
 using OpenFTTH.DesktopBridge.Retrieve;
+using OpenFTTH.DesktopBridge.Event;
 
 namespace OpenFTTH.DesktopBridge.Bridge
 {
@@ -13,11 +15,13 @@ namespace OpenFTTH.DesktopBridge.Bridge
     {
         private readonly ILogger<BridgeServer> _logger;
         private readonly IMediator _mediator;
+        private readonly IEventMapper _eventMapper;
 
-        public BridgeSession(WsServer server, ILogger<BridgeServer> logger, IMediator mediator) : base(server)
+        public BridgeSession(WsServer server, ILogger<BridgeServer> logger, IMediator mediator, IEventMapper eventMapper) : base(server)
         {
             _logger = logger;
             _mediator = mediator;
+            _eventMapper = eventMapper;
         }
 
         public override void OnWsConnected(HttpRequest request)
@@ -45,17 +49,17 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
                 if (string.IsNullOrEmpty(eventType))
                 {
-                    _logger.LogWarning($"The following message: '{jsonMessage}', does not contain a property named '{eventTypePropertyName}' and cannot be parsed.");
+                    _logger.LogError($"The following message: '{jsonMessage}', does not contain a property named '{eventTypePropertyName}' and cannot be parsed.");
                     return;
                 }
 
                 switch (eventType)
                 {
                     case "IdentifyNetworkElement":
-                        await _mediator.Send(new IdentifyNetworkElement(jsonMessage));
+                        await _mediator.Send(new IdentifyNetworkElement());
                         break;
-                    case "RetriveSelected":
-                        await _mediator.Send(new RetrieveSelected("INSERT USERNAME"));
+                    case "RetrieveSelected":
+                        await _mediator.Send(new RetrieveSelected());
                         break;
                     default:
                         _logger.LogWarning($"No event of type '{eventType}'");
