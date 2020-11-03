@@ -3,10 +3,6 @@ using System.Text;
 using NetCoreServer;
 using Microsoft.Extensions.Logging;
 using MediatR;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using OpenFTTH.DesktopBridge.IdentifyNetwork;
-using OpenFTTH.DesktopBridge.Retrieve;
 using OpenFTTH.DesktopBridge.Event;
 
 namespace OpenFTTH.DesktopBridge.Bridge
