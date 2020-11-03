@@ -13,10 +13,11 @@ namespace OpenFTTH.DesktopBridge.Bridge
         private readonly IMediator _mediator;
         private readonly IEventMapper _eventMapper;
 
-        public BridgeServer(IPAddress address, int port, ILogger<BridgeServer> logger, IMediator mediator) : base(address, port)
+        public BridgeServer(IPAddress address, int port, ILogger<BridgeServer> logger, IMediator mediator, IEventMapper eventMapper) : base(address, port)
         {
             _logger = logger;
             _mediator = mediator;
+            _eventMapper = eventMapper;
             OptionKeepAlive = true;
         }
 

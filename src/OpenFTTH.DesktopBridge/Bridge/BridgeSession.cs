@@ -41,30 +41,9 @@ namespace OpenFTTH.DesktopBridge.Bridge
             {
                 jsonMessage = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
                 _logger.LogDebug($"Received from id: '{Id}': {jsonMessage}");
+                var eventMessage = _eventMapper.Map(jsonMessage);
 
-                var message = JObject.Parse(jsonMessage);
-                var eventTypePropertyName = "eventType";
-
-                var eventType = message.GetValue(eventTypePropertyName)?.ToString();
-
-                if (string.IsNullOrEmpty(eventType))
-                {
-                    _logger.LogError($"The following message: '{jsonMessage}', does not contain a property named '{eventTypePropertyName}' and cannot be parsed.");
-                    return;
-                }
-
-                switch (eventType)
-                {
-                    case "IdentifyNetworkElement":
-                        await _mediator.Send(new IdentifyNetworkElement());
-                        break;
-                    case "RetrieveSelected":
-                        await _mediator.Send(new RetrieveSelected());
-                        break;
-                    default:
-                        _logger.LogWarning($"No event of type '{eventType}'");
-                        break;
-                }
+                await _mediator.Send(eventMessage);
             }
             catch
             {
