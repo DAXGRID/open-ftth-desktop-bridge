@@ -22,6 +22,8 @@ namespace OpenFTTH.DesktopBridge.Event
                     return JsonConvert.DeserializeObject<IdentifyNetworkElement>(jsonEvent);
                 case "RetrieveSelected":
                     return JsonConvert.DeserializeObject<RetrieveSelected>(jsonEvent);
+                case "RetrieveSelectedResponse":
+                    return JsonConvert.DeserializeObject<RetrieveSelectedResponse>(jsonEvent);
                 default:
                     throw new ArgumentException($"No event of type '{eventType}'");
             }

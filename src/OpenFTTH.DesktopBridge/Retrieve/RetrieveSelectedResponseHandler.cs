@@ -6,16 +6,16 @@ using Newtonsoft.Json;
 
 namespace OpenFTTH.DesktopBridge.Retrieve
 {
-    public class RetrieveSelectedHandler : IRequestHandler<RetrieveSelected>
+    public class RetrieveSelectedResponseHandler : IRequestHandler<RetrieveSelectedResponse>
     {
         private readonly IBridgeServer _bridgeServer;
 
-        public RetrieveSelectedHandler(IBridgeServer bridgeServer)
+        public RetrieveSelectedResponseHandler(IBridgeServer bridgeServer)
         {
             _bridgeServer = bridgeServer;
         }
 
-        public async Task<Unit> Handle(RetrieveSelected request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(RetrieveSelectedResponse request, CancellationToken cancellationToken)
         {
             _bridgeServer.MulticastText(JsonConvert.SerializeObject(request));
             return await Task.FromResult(new Unit());

@@ -37,6 +37,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
             {
                 jsonMessage = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
                 _logger.LogDebug($"Received from id: '{Id}': {jsonMessage}");
+
                 var eventMessage = _eventMapper.Map(jsonMessage);
 
                 await _mediator.Send(eventMessage);
