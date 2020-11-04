@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
 {
-    public class GeographicalAreaUpdated : IRequest<Unit>
+    public class GeographicalAreaUpdated : IRequest
     {
         public virtual ObjectsWithinGeographicalAreaUpdated ObjectsWithinGeographicalAreaUpdated { get; }
 

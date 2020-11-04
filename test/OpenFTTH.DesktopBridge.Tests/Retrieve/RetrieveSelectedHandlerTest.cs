@@ -10,7 +10,7 @@ namespace OpenFTTH.DesktopBridge.Tests.Retrieve
     public class RetrieveSelectedHandlerTest
     {
         [Fact]
-        public async Task Handle_MulticastsBase64EncodedJsonUpdatedMessage_OnBeingCalled()
+        public async Task Handle_MulticastJsonRetrieveSelectedMessage_OnBeingCalled()
         {
             var bridgeServer = A.Fake<IBridgeServer>();
             var retrieveSelected = A.Fake<RetrieveSelected>();

@@ -30,7 +30,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
             _logger.LogInformation($"Chat WebSocket session with Id {Id} disconnected!");
         }
 
-        public async override void OnWsReceived(byte[] buffer, long offset, long size)
+        public override void OnWsReceived(byte[] buffer, long offset, long size)
         {
             var jsonMessage = string.Empty;
             try
@@ -40,7 +40,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
                 var eventMessage = _eventMapper.Map(jsonMessage);
 
-                await _mediator.Send(eventMessage);
+                _mediator.Send(eventMessage).Wait();
             }
             catch
             {

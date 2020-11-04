@@ -18,7 +18,6 @@ namespace OpenFTTH.DesktopBridge.IdentifyNetwork
         public async Task<Unit> Handle(IdentifyNetworkElement request, CancellationToken cancellationToken)
         {
             _bridgeServer.MulticastText(JsonConvert.SerializeObject(request));
-
             return await Task.FromResult(new Unit());
         }
     }
