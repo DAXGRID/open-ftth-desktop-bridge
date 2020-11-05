@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using NetCoreServer;
 using Microsoft.Extensions.Logging;
 using MediatR;
+using OpenFTTH.DesktopBridge.Event;
 
 namespace OpenFTTH.DesktopBridge.Bridge
 {
@@ -10,17 +11,19 @@ namespace OpenFTTH.DesktopBridge.Bridge
     {
         private readonly ILogger<BridgeServer> _logger;
         private readonly IMediator _mediator;
+        private readonly IEventMapper _eventMapper;
 
-        public BridgeServer(IPAddress address, int port, ILogger<BridgeServer> logger, IMediator mediator) : base(address, port)
+        public BridgeServer(IPAddress address, int port, ILogger<BridgeServer> logger, IMediator mediator, IEventMapper eventMapper) : base(address, port)
         {
             _logger = logger;
             _mediator = mediator;
+            _eventMapper = eventMapper;
             OptionKeepAlive = true;
         }
 
         protected override TcpSession CreateSession()
         {
-            return new BridgeSession(this, _logger, _mediator);
+            return new BridgeSession(this, _logger, _mediator, _eventMapper);
         }
 
         protected override void OnError(SocketError error)

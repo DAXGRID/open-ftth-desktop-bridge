@@ -6,6 +6,7 @@ using Serilog.Formatting.Compact;
 using OpenFTTH.DesktopBridge.Bridge;
 using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
 using OpenFTTH.DesktopBridge.Config;
+using OpenFTTH.DesktopBridge.Event;
 using System.Net;
 using MediatR;
 using Newtonsoft.Json;
@@ -57,6 +58,7 @@ namespace OpenFTTH.DesktopBridge.Internal
 
                 services.AddHostedService<DesktopBridgeHost>();
                 services.AddTransient<IGeographicalAreaUpdatedConsumer, GeographicalAreaUpdatedKafkaConsumer>();
+                services.AddTransient<IEventMapper, EventMapper>();
 
                 services.Configure<KafkaSetting>(kafkaSettings =>
                                                  hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));
@@ -66,7 +68,10 @@ namespace OpenFTTH.DesktopBridge.Internal
                         IPAddress.Any,
                         5000,
                         x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>(),
-                        x.GetRequiredService<IMediator>()));
+                        x.GetRequiredService<IMediator>(),
+                        x.GetRequiredService<IEventMapper>()
+                        )
+                    );
             });
         }
 
