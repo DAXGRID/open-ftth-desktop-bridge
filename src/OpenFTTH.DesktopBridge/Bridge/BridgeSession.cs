@@ -1,3 +1,4 @@
+using System;
 using System.Net.Sockets;
 using System.Text;
 using NetCoreServer;
@@ -42,9 +43,9 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
                 _mediator.Send(eventMessage).Wait();
             }
-            catch
+            catch (Exception ex)
             {
-                _logger.LogError($"Received invalid message with content: {jsonMessage}");
+                _logger.LogError($"Received invalid message with content: {jsonMessage} and exception: {ex.Message}");
             }
         }
 
