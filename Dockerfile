@@ -4,6 +4,7 @@ WORKDIR /app
 COPY ./*sln ./
 
 COPY ./src/OpenFTTH.DesktopBridge/*.csproj ./src/OpenFTTH.DesktopBridge/
+COPY ./test/OpenFTTH.DesktopBridge.Tests/*.csproj ./test/OpenFTTH.DesktopBridge.Tests/
 
 RUN dotnet restore --packages ./packages
 
