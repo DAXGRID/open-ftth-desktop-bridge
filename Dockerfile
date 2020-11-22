@@ -18,3 +18,5 @@ WORKDIR /app
 
 COPY --from=build-env /app/src/OpenFTTH.DesktopBridge/out .
 ENTRYPOINT ["dotnet", "OpenFTTH.DesktopBridge.dll"]
+
+EXPOSE 80 443
