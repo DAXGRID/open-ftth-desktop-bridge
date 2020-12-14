@@ -5,7 +5,7 @@ Enables the communication between desktop applications such as QGIS to the open-
 ## Requirements running the application
 
 * [Taskfile](https://taskfile.dev/#/installation)
-* dotnet aspnet-runtime 3.1
+* dotnet dotnet-runtime 5.0
 
 ## Configure environment variables using minikube ip and ports
 
