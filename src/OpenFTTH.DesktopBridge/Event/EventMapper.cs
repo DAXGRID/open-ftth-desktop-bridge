@@ -2,6 +2,7 @@ using System;
 using OpenFTTH.DesktopBridge.IdentifyNetwork;
 using OpenFTTH.DesktopBridge.Retrieve;
 using OpenFTTH.DesktopBridge.Pan;
+using OpenFTTH.DesktopBridge.Highlight;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MediatR;
@@ -27,6 +28,8 @@ namespace OpenFTTH.DesktopBridge.Event
                     return JsonConvert.DeserializeObject<RetrieveSelectedResponse>(jsonEvent);
                 case "PanToCoordinate":
                     return JsonConvert.DeserializeObject<PanToCoordinate>(jsonEvent);
+                case "HighlightFeatures":
+                    return JsonConvert.DeserializeObject<HighlightFeatures>(jsonEvent);
                 default:
                     throw new ArgumentException($"No event of type '{eventType}'");
             }
