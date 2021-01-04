@@ -3,6 +3,7 @@ using System;
 using OpenFTTH.DesktopBridge.IdentifyNetwork;
 using OpenFTTH.DesktopBridge.Event;
 using OpenFTTH.DesktopBridge.Retrieve;
+using OpenFTTH.DesktopBridge.Highlight;
 using FluentAssertions;
 
 namespace OpenFTTH.DesktopBridge.Tests
@@ -13,6 +14,7 @@ namespace OpenFTTH.DesktopBridge.Tests
         [InlineData("{ \"eventType\": \"IdentifyNetworkElement\" }", typeof(IdentifyNetworkElement))]
         [InlineData("{ \"eventType\": \"RetrieveSelected\" }", typeof(RetrieveSelected))]
         [InlineData("{ \"eventType\": \"RetrieveSelectedResponse\" }", typeof(RetrieveSelectedResponse))]
+        [InlineData("{ \"eventType\": \"HighlightFeatures\" }", typeof(HighlightFeatures))]
         public void Map_ShouldReturnCorrectlyParsedType_OnReceivedJsonEvent(string jsonEvent, Type expectedType)
         {
             var mapper = new EventMapper();
