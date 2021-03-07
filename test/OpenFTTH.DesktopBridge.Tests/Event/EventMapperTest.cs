@@ -13,6 +13,7 @@ namespace OpenFTTH.DesktopBridge.Tests
     {
         [Theory]
         [InlineData("{ \"eventType\": \"IdentifyNetworkElement\" }", typeof(IdentifyNetworkElement))]
+        [InlineData("{ \"eventType\": \"RetrieveIdentifiedNetworkElement\" }", typeof(RetrieveIdentifiedNetworkElement))]
         [InlineData("{ \"eventType\": \"RetrieveSelected\" }", typeof(RetrieveSelected))]
         [InlineData("{ \"eventType\": \"RetrieveSelectedResponse\" }", typeof(RetrieveSelectedResponse))]
         [InlineData("{ \"eventType\": \"PanToCoordinate\" }", typeof(PanToCoordinate))]
