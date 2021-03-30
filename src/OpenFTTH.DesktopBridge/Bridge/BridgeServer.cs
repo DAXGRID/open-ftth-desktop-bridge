@@ -50,7 +50,7 @@ namespace OpenFTTH.DesktopBridge.Bridge
 
         private void Ping()
         {
-            _logger.LogInformation("Pinging clients");
+            _logger.LogDebug("Pinging clients");
             SendPing("ping");
         }
     }
