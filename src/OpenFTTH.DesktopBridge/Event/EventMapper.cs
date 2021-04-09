@@ -32,6 +32,8 @@ namespace OpenFTTH.DesktopBridge.Event
                     return JsonConvert.DeserializeObject<PanToCoordinate>(jsonEvent);
                 case "HighlightFeatures":
                     return JsonConvert.DeserializeObject<HighlightFeatures>(jsonEvent);
+                case "SelectRouteSegments":
+                    return JsonConvert.DeserializeObject<SelectRouteSegments>(jsonEvent);
                 default:
                     throw new ArgumentException($"No event of type '{eventType}'");
             }

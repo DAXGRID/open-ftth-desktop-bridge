@@ -18,6 +18,7 @@ namespace OpenFTTH.DesktopBridge.Tests
         [InlineData("{ \"eventType\": \"RetrieveSelectedResponse\" }", typeof(RetrieveSelectedResponse))]
         [InlineData("{ \"eventType\": \"PanToCoordinate\" }", typeof(PanToCoordinate))]
         [InlineData("{ \"eventType\": \"HighlightFeatures\" }", typeof(HighlightFeatures))]
+        [InlineData("{ \"eventType\": \"SelectRouteSegments\" }", typeof(SelectRouteSegments))]
         public void Map_ShouldReturnCorrectlyParsedType_OnReceivedJsonEvent(string jsonEvent, Type expectedType)
         {
             var mapper = new EventMapper();
