@@ -15,7 +15,7 @@ tasks:
      - dotnet restore
   start:
     cmds:
-     - dotnet run -p src/OpenFTTH.DesktopBridge/OpenFTTH.DesktopBridge.csproj
+     - dotnet run --project src/OpenFTTH.DesktopBridge/OpenFTTH.DesktopBridge.csproj
   test:
     cmds:
      - dotnet test

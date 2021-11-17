@@ -7,36 +7,35 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MediatR;
 
-namespace OpenFTTH.DesktopBridge.Event
+namespace OpenFTTH.DesktopBridge.Event;
+
+public class EventMapper : IEventMapper
 {
-    public class EventMapper : IEventMapper
+    public IRequest<Unit> Map(string jsonEvent)
     {
-        public IRequest<Unit> Map(string jsonEvent)
+        var message = JObject.Parse(jsonEvent);
+
+        var eventTypePropertyName = "eventType";
+        var eventType = message.GetValue(eventTypePropertyName)?.ToString();
+
+        switch (eventType)
         {
-            var message = JObject.Parse(jsonEvent);
-
-            var eventTypePropertyName = "eventType";
-            var eventType = message.GetValue(eventTypePropertyName)?.ToString();
-
-            switch (eventType)
-            {
-                case "IdentifyNetworkElement":
-                    return JsonConvert.DeserializeObject<IdentifyNetworkElement>(jsonEvent);
-                case "RetrieveIdentifiedNetworkElement":
-                    return JsonConvert.DeserializeObject<RetrieveIdentifiedNetworkElement>(jsonEvent);
-                case "RetrieveSelected":
-                    return JsonConvert.DeserializeObject<RetrieveSelected>(jsonEvent);
-                case "RetrieveSelectedResponse":
-                    return JsonConvert.DeserializeObject<RetrieveSelectedResponse>(jsonEvent);
-                case "PanToCoordinate":
-                    return JsonConvert.DeserializeObject<PanToCoordinate>(jsonEvent);
-                case "HighlightFeatures":
-                    return JsonConvert.DeserializeObject<HighlightFeatures>(jsonEvent);
-                case "SelectRouteSegments":
-                    return JsonConvert.DeserializeObject<SelectRouteSegments>(jsonEvent);
-                default:
-                    throw new ArgumentException($"No event of type '{eventType}'");
-            }
+            case "IdentifyNetworkElement":
+                return JsonConvert.DeserializeObject<IdentifyNetworkElement>(jsonEvent);
+            case "RetrieveIdentifiedNetworkElement":
+                return JsonConvert.DeserializeObject<RetrieveIdentifiedNetworkElement>(jsonEvent);
+            case "RetrieveSelected":
+                return JsonConvert.DeserializeObject<RetrieveSelected>(jsonEvent);
+            case "RetrieveSelectedResponse":
+                return JsonConvert.DeserializeObject<RetrieveSelectedResponse>(jsonEvent);
+            case "PanToCoordinate":
+                return JsonConvert.DeserializeObject<PanToCoordinate>(jsonEvent);
+            case "HighlightFeatures":
+                return JsonConvert.DeserializeObject<HighlightFeatures>(jsonEvent);
+            case "SelectRouteSegments":
+                return JsonConvert.DeserializeObject<SelectRouteSegments>(jsonEvent);
+            default:
+                throw new ArgumentException($"No event of type '{eventType}'");
         }
     }
 }

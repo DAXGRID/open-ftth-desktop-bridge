@@ -4,21 +4,20 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace OpenFTTH.DesktopBridge.IdentifyNetwork
+namespace OpenFTTH.DesktopBridge.IdentifyNetwork;
+
+public class IdentifyNetworkElementHandler : IRequestHandler<IdentifyNetworkElement>
 {
-    public class IdentifyNetworkElementHandler : IRequestHandler<IdentifyNetworkElement>
+    private readonly IBridgeServer _bridgeServer;
+
+    public IdentifyNetworkElementHandler(IBridgeServer bridgeServer)
     {
-        private readonly IBridgeServer _bridgeServer;
+        _bridgeServer = bridgeServer;
+    }
 
-        public IdentifyNetworkElementHandler(IBridgeServer bridgeServer)
-        {
-            _bridgeServer = bridgeServer;
-        }
-
-        public async Task<Unit> Handle(IdentifyNetworkElement request, CancellationToken cancellationToken)
-        {
-            _bridgeServer.MulticastText(JsonConvert.SerializeObject(request));
-            return await Task.FromResult(new Unit());
-        }
+    public async Task<Unit> Handle(IdentifyNetworkElement request, CancellationToken cancellationToken)
+    {
+        _bridgeServer.MulticastText(JsonConvert.SerializeObject(request));
+        return await Task.FromResult(new Unit());
     }
 }

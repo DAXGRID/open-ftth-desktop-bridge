@@ -6,52 +6,54 @@ using Microsoft.Extensions.Logging;
 using MediatR;
 using OpenFTTH.DesktopBridge.Event;
 
-namespace OpenFTTH.DesktopBridge.Bridge
+namespace OpenFTTH.DesktopBridge.Bridge;
+
+public class BridgeSession : WsSession
 {
-    public class BridgeSession : WsSession
+    private readonly ILogger<BridgeServer> _logger;
+    private readonly IMediator _mediator;
+    private readonly IEventMapper _eventMapper;
+
+    public BridgeSession(WsServer server,
+                         ILogger<BridgeServer> logger,
+                         IMediator mediator,
+                         IEventMapper eventMapper) : base(server)
     {
-        private readonly ILogger<BridgeServer> _logger;
-        private readonly IMediator _mediator;
-        private readonly IEventMapper _eventMapper;
+        _logger = logger;
+        _mediator = mediator;
+        _eventMapper = eventMapper;
+    }
 
-        public BridgeSession(WsServer server, ILogger<BridgeServer> logger, IMediator mediator, IEventMapper eventMapper) : base(server)
+    public override void OnWsConnected(HttpRequest request)
+    {
+        _logger.LogInformation($"Chat WebSocket session with Id {Id} connected!");
+    }
+
+    public override void OnWsDisconnected()
+    {
+        _logger.LogInformation($"Chat WebSocket session with Id {Id} disconnected!");
+    }
+
+    public override void OnWsReceived(byte[] buffer, long offset, long size)
+    {
+        var jsonMessage = string.Empty;
+        try
         {
-            _logger = logger;
-            _mediator = mediator;
-            _eventMapper = eventMapper;
-        }
+            jsonMessage = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
+            _logger.LogDebug($"Received from id: '{Id}': {jsonMessage}");
 
-        public override void OnWsConnected(HttpRequest request)
+            var eventMessage = _eventMapper.Map(jsonMessage);
+
+            _mediator.Send(eventMessage).Wait();
+        }
+        catch (Exception ex)
         {
-            _logger.LogInformation($"Chat WebSocket session with Id {Id} connected!");
+            _logger.LogError($"Received invalid message with content: {jsonMessage} and exception: {ex.Message}");
         }
+    }
 
-        public override void OnWsDisconnected()
-        {
-            _logger.LogInformation($"Chat WebSocket session with Id {Id} disconnected!");
-        }
-
-        public override void OnWsReceived(byte[] buffer, long offset, long size)
-        {
-            var jsonMessage = string.Empty;
-            try
-            {
-                jsonMessage = Encoding.UTF8.GetString(buffer, (int)offset, (int)size);
-                _logger.LogDebug($"Received from id: '{Id}': {jsonMessage}");
-
-                var eventMessage = _eventMapper.Map(jsonMessage);
-
-                _mediator.Send(eventMessage).Wait();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Received invalid message with content: {jsonMessage} and exception: {ex.Message}");
-            }
-        }
-
-        protected override void OnError(SocketError error)
-        {
-            _logger.LogError($"Chat WebSocket session caught an error with code {error}");
-        }
+    protected override void OnError(SocketError error)
+    {
+        _logger.LogError($"Chat WebSocket session caught an error with code {error}");
     }
 }

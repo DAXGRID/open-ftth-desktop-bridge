@@ -1,9 +1,8 @@
 using System;
 
-namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated
+namespace OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
+
+public interface IGeographicalAreaUpdatedConsumer : IDisposable
 {
-    public interface IGeographicalAreaUpdatedConsumer : IDisposable
-    {
-        void Consume();
-    }
+    void Consume();
 }
