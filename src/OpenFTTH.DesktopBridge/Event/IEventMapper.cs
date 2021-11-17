@@ -1,9 +1,8 @@
 using MediatR;
 
-namespace OpenFTTH.DesktopBridge.Event
+namespace OpenFTTH.DesktopBridge.Event;
+
+public interface IEventMapper
 {
-    public interface IEventMapper
-    {
-        IRequest<Unit> Map(string jsonEvent);
-    }
+    IRequest<Unit> Map(string jsonEvent);
 }
