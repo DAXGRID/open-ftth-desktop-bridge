@@ -1,10 +1,10 @@
+using MediatR;
+using Microsoft.Extensions.Logging;
+using NetCoreServer;
+using OpenFTTH.DesktopBridge.Event;
 using System;
 using System.Net.Sockets;
 using System.Text;
-using NetCoreServer;
-using Microsoft.Extensions.Logging;
-using MediatR;
-using OpenFTTH.DesktopBridge.Event;
 
 namespace OpenFTTH.DesktopBridge.Bridge;
 
@@ -26,12 +26,12 @@ public class BridgeSession : WsSession
 
     public override void OnWsConnected(HttpRequest request)
     {
-        _logger.LogInformation($"Chat WebSocket session with Id {Id} connected!");
+        _logger.LogInformation($"WebSocket session with Id {Id} connected!");
     }
 
     public override void OnWsDisconnected()
     {
-        _logger.LogInformation($"Chat WebSocket session with Id {Id} disconnected!");
+        _logger.LogInformation($"WebSocket session with Id {Id} disconnected!");
     }
 
     public override void OnWsReceived(byte[] buffer, long offset, long size)
@@ -54,6 +54,6 @@ public class BridgeSession : WsSession
 
     protected override void OnError(SocketError error)
     {
-        _logger.LogError($"Chat WebSocket session caught an error with code {error}");
+        _logger.LogError($"WebSocket session caught an error with code {error}");
     }
 }

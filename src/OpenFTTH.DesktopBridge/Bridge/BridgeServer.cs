@@ -1,9 +1,9 @@
+using MediatR;
+using Microsoft.Extensions.Logging;
+using NetCoreServer;
+using OpenFTTH.DesktopBridge.Event;
 using System.Net;
 using System.Net.Sockets;
-using NetCoreServer;
-using Microsoft.Extensions.Logging;
-using MediatR;
-using OpenFTTH.DesktopBridge.Event;
 using System.Threading;
 
 namespace OpenFTTH.DesktopBridge.Bridge;
@@ -40,7 +40,7 @@ public class BridgeServer : WsServer, IBridgeServer
 
     protected override void OnError(SocketError error)
     {
-        _logger.LogError($"Chat WebSocket server caught an error with code {error}");
+        _logger.LogError($"WebSocket server caught an error with code {error}");
     }
 
     protected override void OnStopped()
