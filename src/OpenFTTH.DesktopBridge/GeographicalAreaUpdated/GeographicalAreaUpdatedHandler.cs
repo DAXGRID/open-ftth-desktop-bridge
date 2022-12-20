@@ -30,7 +30,7 @@ public class GeographicalAreaUpdatedHandler : IRequestHandler<GeographicalAreaUp
     public async Task<Unit> Handle(GeographicalAreaUpdated request, CancellationToken cancellationToken)
     {
         if (request.ObjectsWithinGeographicalAreaUpdated is null)
-            throw new ArgumentNullException($"{nameof(ObjectsWithinGeographicalAreaUpdated)} cannot be null");
+            throw new ArgumentNullException($"{nameof(ObjectsWithinGeographicalAreaUpdated)} cannot be null.");
 
         var json = JsonConvert.SerializeObject(request.ObjectsWithinGeographicalAreaUpdated);
 

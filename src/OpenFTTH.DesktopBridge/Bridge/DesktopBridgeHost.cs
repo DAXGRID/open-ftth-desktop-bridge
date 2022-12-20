@@ -1,13 +1,13 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using System.IO;
 using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace OpenFTTH.DesktopBridge.Bridge;
 
-public class DesktopBridgeHost : IHostedService
+public class DesktopBridgeHost : BackgroundService
 {
     private readonly ILogger<DesktopBridgeHost> _logger;
     private readonly IHostApplicationLifetime _applicationLifetime;
@@ -26,41 +26,29 @@ public class DesktopBridgeHost : IHostedService
         _geographicalAreaUpdatedConsumer = geographicalAreaUpdatedConsumer;
     }
 
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation($"Starting {nameof(DesktopBridgeHost)}");
+        _logger.LogInformation("Starting {Name}.", nameof(BridgeServer));
+        if (!_bridgeServer.Start())
+        {
+            throw new InvalidDataException($"Could not start {nameof(BridgeServer)}");
+        }
 
-        _applicationLifetime.ApplicationStarted.Register(OnStarted);
-        _applicationLifetime.ApplicationStopping.Register(OnStopped);
+        _logger.LogInformation("Starting {Name}.", nameof(GeographicalAreaUpdatedConsumer));
+        await _geographicalAreaUpdatedConsumer
+            .Consume()
+            .ConfigureAwait(false);
 
-        MarkAsReady();
+        // Mark service as ready.
+        using var _ = File.Create(Path.Combine(Path.GetTempPath(), "healthy"));
 
-        return Task.CompletedTask;
+        _logger.LogInformation("Service is now healthy.");
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation($"Stopping {nameof(BridgeServer)}...");
-        _bridgeServer.Stop();
-        return Task.CompletedTask;
-    }
-
-    private void MarkAsReady()
-    {
-        File.Create("/tmp/healthy");
-    }
-
-    private void OnStarted()
-    {
-        _logger.LogInformation($"Starting {nameof(BridgeServer)}");
-        _bridgeServer.Start();
-        _geographicalAreaUpdatedConsumer.Consume();
-    }
-
-    private void OnStopped()
+    public override void Dispose()
     {
         _geographicalAreaUpdatedConsumer.Dispose();
-        _bridgeServer.Dispose();
-        _logger.LogInformation("Stopped");
+        _bridgeServer.Stop();
+        base.Dispose();
     }
 }
