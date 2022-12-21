@@ -1,17 +1,18 @@
-using Microsoft.Extensions.Hosting;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using Serilog.Formatting.Compact;
-using OpenFTTH.DesktopBridge.Bridge;
-using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
-using OpenFTTH.DesktopBridge.Config;
-using OpenFTTH.DesktopBridge.Event;
-using System.Net;
-using MediatR;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using OpenFTTH.DesktopBridge.Bridge;
+using OpenFTTH.DesktopBridge.Config;
+using OpenFTTH.DesktopBridge.Event;
+using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
+using Serilog;
+using Serilog.Events;
+using Serilog.Formatting.Compact;
+using System.Net;
 
 namespace OpenFTTH.DesktopBridge.Internal;
 
@@ -57,11 +58,12 @@ public static class HostConfig
             services.AddMediatR(typeof(Program));
 
             services.AddHostedService<DesktopBridgeHost>();
-            services.AddTransient<IGeographicalAreaUpdatedConsumer, GeographicalAreaUpdatedKafkaConsumer>();
+            services.AddTransient<IGeographicalAreaUpdatedConsumer, GeographicalAreaUpdatedConsumer>();
             services.AddTransient<IEventMapper, EventMapper>();
 
-            services.Configure<KafkaSetting>(kafkaSettings =>
-                                             hostContext.Configuration.GetSection("kafka").Bind(kafkaSettings));
+            services.Configure<NotificationServerSetting>(
+                notificationServerSettings =>
+                hostContext.Configuration.GetSection("notificationServer").Bind(notificationServerSettings));
 
             services.AddSingleton<IBridgeServer, BridgeServer>(
                 x => new BridgeServer(
@@ -70,8 +72,8 @@ public static class HostConfig
                     x.GetRequiredService<Microsoft.Extensions.Logging.ILogger<BridgeServer>>(),
                     x.GetRequiredService<IMediator>(),
                     x.GetRequiredService<IEventMapper>()
-                    )
-                );
+                )
+            );
         });
     }
 
@@ -85,6 +87,9 @@ public static class HostConfig
             services.AddLogging(loggingBuilder =>
             {
                 var logger = new LoggerConfiguration()
+                    .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+                    .MinimumLevel.Override("System", LogEventLevel.Warning)
+                    .MinimumLevel.Information()
                     .ReadFrom.Configuration(loggingConfiguration)
                     .Enrich.FromLogContext()
                     .WriteTo.Console(new CompactJsonFormatter())
