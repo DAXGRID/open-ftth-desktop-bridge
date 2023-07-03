@@ -6,6 +6,7 @@ using OpenFTTH.DesktopBridge.Highlight;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using MediatR;
+using OpenFTTH.DesktopBridge.UserError;
 
 namespace OpenFTTH.DesktopBridge.Event;
 
@@ -34,6 +35,8 @@ public class EventMapper : IEventMapper
                 return JsonConvert.DeserializeObject<HighlightFeatures>(jsonEvent);
             case "SelectRouteSegments":
                 return JsonConvert.DeserializeObject<SelectRouteSegments>(jsonEvent);
+            case "UserErrorOccurred":
+                return JsonConvert.DeserializeObject<UserErrorOccurred>(jsonEvent);
             default:
                 throw new ArgumentException($"No event of type '{eventType}'");
         }
