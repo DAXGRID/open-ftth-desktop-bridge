@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
+using OpenFTTH.DesktopBridge.Notification;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,18 +13,18 @@ public class DesktopBridgeHost : BackgroundService
     private readonly ILogger<DesktopBridgeHost> _logger;
     private readonly IHostApplicationLifetime _applicationLifetime;
     private readonly IBridgeServer _bridgeServer;
-    private readonly IGeographicalAreaUpdatedConsumer _geographicalAreaUpdatedConsumer;
+    private readonly INotificationConsumer _notificationConsumer;
 
     public DesktopBridgeHost(
         ILogger<DesktopBridgeHost> logger,
         IHostApplicationLifetime applicationLifetime,
         IBridgeServer bridgeServer,
-        IGeographicalAreaUpdatedConsumer geographicalAreaUpdatedConsumer)
+        INotificationConsumer notificationConsumer)
     {
         _logger = logger;
         _applicationLifetime = applicationLifetime;
         _bridgeServer = bridgeServer;
-        _geographicalAreaUpdatedConsumer = geographicalAreaUpdatedConsumer;
+        _notificationConsumer = notificationConsumer;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -34,8 +35,8 @@ public class DesktopBridgeHost : BackgroundService
             throw new InvalidDataException($"Could not start {nameof(BridgeServer)}");
         }
 
-        _logger.LogInformation("Starting {Name}.", nameof(GeographicalAreaUpdatedConsumer));
-        await _geographicalAreaUpdatedConsumer
+        _logger.LogInformation("Starting {Name}.", nameof(INotificationConsumer));
+        var notificationConsumer = _notificationConsumer
             .Consume()
             .ConfigureAwait(false);
 
@@ -43,11 +44,13 @@ public class DesktopBridgeHost : BackgroundService
         using var _ = File.Create(Path.Combine(Path.GetTempPath(), "healthy"));
 
         _logger.LogInformation("Service is now healthy.");
+
+        await notificationConsumer;
     }
 
     public override void Dispose()
     {
-        _geographicalAreaUpdatedConsumer.Dispose();
+        _notificationConsumer.Dispose();
         _bridgeServer.Stop();
         base.Dispose();
     }
