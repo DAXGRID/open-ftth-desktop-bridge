@@ -9,6 +9,7 @@ using OpenFTTH.DesktopBridge.Bridge;
 using OpenFTTH.DesktopBridge.Config;
 using OpenFTTH.DesktopBridge.Event;
 using OpenFTTH.DesktopBridge.GeographicalAreaUpdated;
+using OpenFTTH.DesktopBridge.Notification;
 using Serilog;
 using Serilog.Events;
 using Serilog.Formatting.Compact;
@@ -58,7 +59,7 @@ public static class HostConfig
             services.AddMediatR(typeof(Program));
 
             services.AddHostedService<DesktopBridgeHost>();
-            services.AddTransient<IGeographicalAreaUpdatedConsumer, GeographicalAreaUpdatedConsumer>();
+            services.AddTransient<INotificationConsumer, NotificationConsumer>();
             services.AddTransient<IEventMapper, EventMapper>();
 
             services.Configure<NotificationServerSetting>(

@@ -35,8 +35,6 @@ public class EventMapper : IEventMapper
                 return JsonConvert.DeserializeObject<HighlightFeatures>(jsonEvent);
             case "SelectRouteSegments":
                 return JsonConvert.DeserializeObject<SelectRouteSegments>(jsonEvent);
-            case "UserErrorOccurred":
-                return JsonConvert.DeserializeObject<UserErrorOccurred>(jsonEvent);
             default:
                 throw new ArgumentException($"No event of type '{eventType}'");
         }
