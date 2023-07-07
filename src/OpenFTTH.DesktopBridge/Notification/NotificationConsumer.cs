@@ -78,7 +78,8 @@ public sealed class NotificationConsumer : INotificationConsumer
             }
             else
             {
-                _logger.LogWarning(
+                // This is okay, we do not care about all notifications.
+                _logger.LogDebug(
                     "Received message with {Type} that could not be handled",
                     notification.Type);
             }
