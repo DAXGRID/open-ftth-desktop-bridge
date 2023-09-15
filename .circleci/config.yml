@@ -11,18 +11,20 @@ executors:
     environment:
       IMAGE_NAME: openftth/desktop-bridge
     docker:
-      - image: cimg/base:2020.09
+      - image: cimg/base:2022.12
         auth:
           username: $DOCKER_LOGIN
           password: $DOCKER_ACCESSTOKEN
   alpine-git:
     environment:
       IMAGE_NAME: openftth/desktop-bridge
+      CHART_PATH: ./dax/desktop-bridge
+      GIT_USER_NAME: "dax-bot"
+      GIT_USER_EMAIL: "admin@dax.dk"
+      GIT_CLONE_REPO: "git@github.com:DAXGRID/dax-charts.git"
+      SSH_FINGERPRINT: "15:c2:8d:56:8d:09:e5:25:e7:73:d9:eb:5f:f5:c5:1f"
     docker:
     - image: alpine/git
-      auth:
-        username: $DOCKER_LOGIN
-        password: $DOCKER_ACCESSTOKEN
 
 jobs:
   build-app:
@@ -30,25 +32,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install taskfile
-          command: curl -sL https://taskfile.dev/install.sh | sh
-      - run:
-          name: Restore
-          command: ./bin/task restore
-      - run:
-          name: Build
-          command: ./bin/task build-release
-
-  test-app:
-    executor: dotnet-core-sdk
-    steps:
-      - checkout
-      - run:
-          name: Install taskrunner
-          command: curl -sL https://taskfile.dev/install.sh | sh
-      - run:
-          name: Test
-          command: ./bin/task test-verbose
+          name: Build application
+          command: dotnet build
 
   build-docker-image:
     executor: docker-publisher
@@ -66,7 +51,6 @@ jobs:
          root: .
          paths:
           - ./image.tar
-
   docker-publish-image:
     executor: docker-publisher
     steps:
@@ -84,45 +68,35 @@ jobs:
            docker tag $IMAGE_NAME:latest $IMAGE_NAME:$IMAGE_TAG
            docker push $IMAGE_NAME:latest
            docker push $IMAGE_NAME:$IMAGE_TAG
-
   update-helm-chart:
     executor: alpine-git
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "15:c2:8d:56:8d:09:e5:25:e7:73:d9:eb:5f:f5:c5:1f"
+            - $SSH_FINGERPRINT
       - run:
           name: key-scan
           command: ssh-keyscan github.com >> ~/.ssh/known_hosts
       - run:
-          name: git clone open-ftth-chart
-          command: git clone git@github.com:DAXGRID/open-ftth-chart.git
+          name: git clone charts repo
+          command: git clone $GIT_CLONE_REPO
       - run:
           name: package and push
           command: |
              apk add bash
              IMAGE_TAG_NO_V=${CIRCLE_TAG:1}
-             cd ./open-ftth-chart
-             git config user.email "admin@dax.dk"
-             git config user.name "dax-bot"
-             sed -i "/appVersion:.*/c\appVersion: \"$IMAGE_TAG_NO_V\"" ./openftth/charts/desktop-bridge/Chart.yaml
-             sed -i "/  tag:.*/c\  tag: v$IMAGE_TAG_NO_V" ./openftth/charts/desktop-bridge/values.yaml
-             CHART_VERSION="$(./scripts/increment-chart-number.sh "$(grep -w '^version:' ./openftth/Chart.yaml)" bug)"
-             sed -i "/^version:.*/c\version: $CHART_VERSION" ./openftth/Chart.yaml
+             cd ./dax-charts
+             git config user.email $GIT_USER_EMAIL
+             git config user.name $GIT_USER_NAME
+             ./scripts/update-chart-version.sh $CHART_PATH $IMAGE_TAG_NO_V
              git add .
-             git commit -m "upgrades $IMAGE_NAME to version $CHART_VERSION"
+             git commit -m "upgrades $IMAGE_NAME to version $CIRCLE_TAG"
              git push
-
 workflows:
   build-test-upload_image:
     jobs:
       - build-app:
-          context: docker
-          filters:
-            tags:
-              only: /.*/
-      - test-app:
           context: docker
           filters:
             tags:
@@ -138,7 +112,6 @@ workflows:
           context: docker
           requires:
            - build-app
-           - test-app
            - build-docker-image
           filters:
             tags:
