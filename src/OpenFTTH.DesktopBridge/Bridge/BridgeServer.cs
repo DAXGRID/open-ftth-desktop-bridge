@@ -2,8 +2,10 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using NetCoreServer;
 using OpenFTTH.DesktopBridge.Event;
+using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace OpenFTTH.DesktopBridge.Bridge;
 
@@ -12,6 +14,7 @@ public class BridgeServer : WsServer, IBridgeServer
     private readonly ILogger<BridgeServer> _logger;
     private readonly IMediator _mediator;
     private readonly IEventMapper _eventMapper;
+    private Timer _timer;
 
     public BridgeServer(IPAddress address,
                         int port,
@@ -26,6 +29,18 @@ public class BridgeServer : WsServer, IBridgeServer
         OptionTcpKeepAliveTime = 300;
         OptionTcpKeepAliveInterval = 15;
         OptionTcpKeepAliveRetryCount = 10;
+    }
+
+    protected override void OnStarted()
+    {
+        base.OnStarted();
+        _timer = new Timer(o => base.MulticastPing("ping"), null, 0, 30000);
+    }
+
+    protected override void OnStopped()
+    {
+        _timer.Dispose();
+        base.OnStopped();
     }
 
     protected override TcpSession CreateSession()
