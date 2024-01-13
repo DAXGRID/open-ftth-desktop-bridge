@@ -35,6 +35,14 @@ jobs:
           name: Build application
           command: dotnet build
 
+  test-app:
+    executor: dotnet-core-sdk
+    steps:
+      - checkout
+      - run:
+          name: Test application
+          command: dotnet test
+
   build-docker-image:
     executor: docker-publisher
     steps:
@@ -101,6 +109,11 @@ workflows:
           filters:
             tags:
               only: /.*/
+      - test-app:
+          context: docker
+          filters:
+            tags:
+              only: /.*/
       - build-docker-image:
           context: docker
           filters:
@@ -112,6 +125,7 @@ workflows:
           context: docker
           requires:
            - build-app
+           - test-app
            - build-docker-image
           filters:
             tags:
