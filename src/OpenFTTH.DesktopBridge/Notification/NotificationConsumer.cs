@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using OpenFTTH.DesktopBridge.Config;
 using OpenFTTH.DesktopBridge.UserError;
+using OpenFTTH.DesktopBridge.TilesetUpdated;
 using OpenFTTH.Events.Geo;
 using OpenFTTH.NotificationClient;
 using System;
@@ -74,6 +75,21 @@ public sealed class NotificationConsumer : INotificationConsumer
 
                 await _mediator
                     .Send(userErrorOccurred)
+                    .ConfigureAwait(false);
+            }
+            else if (string.Equals(notification.Type, "TilesetUpdated", StringComparison.OrdinalIgnoreCase))
+            {
+                var tilesetUpdated = JsonConvert
+                    .DeserializeObject<TilesetUpdated.TilesetUpdated>(notification.Body);
+
+                if (tilesetUpdated is null)
+                {
+                    throw new InvalidOperationException(
+                        $"Deserializeing of {nameof(TilesetUpdated)} resulted in null.");
+                }
+
+                await _mediator
+                    .Send(tilesetUpdated)
                     .ConfigureAwait(false);
             }
             else
