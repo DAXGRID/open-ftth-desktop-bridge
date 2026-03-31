@@ -13,7 +13,7 @@ WORKDIR /app/src/OpenFTTH.DesktopBridge
 RUN dotnet publish -c Release -o out --packages ./packages
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/runtime:8.0
+FROM mcr.microsoft.com/dotnet/runtime:10.0
 WORKDIR /app
 
 COPY --from=build-env /app/src/OpenFTTH.DesktopBridge/out .
