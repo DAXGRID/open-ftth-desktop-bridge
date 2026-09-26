@@ -9,7 +9,7 @@ executors:
         password: $DOCKER_ACCESSTOKEN
   docker-publisher:
     environment:
-      IMAGE_NAME: openftth/desktop-bridge
+      IMAGE_NAME: daxgrid/desktop-bridge
     docker:
       - image: cimg/base:current
         auth:
