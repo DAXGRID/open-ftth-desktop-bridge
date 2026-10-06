@@ -16,7 +16,7 @@ RUN dotnet publish -c Release -o out --packages ./packages
 FROM mcr.microsoft.com/dotnet/runtime:10.0-alpine
 WORKDIR /app
 
-COPY --from=build-env /app/src/OpenFTTH.DesktopBridge/out .
+COPY --from=build-env --chown=app:app /app/src/OpenFTTH.DesktopBridge/out .
+EXPOSE 5000
+USER app
 ENTRYPOINT ["dotnet", "OpenFTTH.DesktopBridge.dll"]
-
-EXPOSE 80 443
